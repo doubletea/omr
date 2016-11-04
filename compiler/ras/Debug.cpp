@@ -5622,7 +5622,7 @@ static FILE *openDebugCounterFile(char *counterFileName)
    if (counterFileName)
       result = fopen(counterFileName, "a");
    if (!result)
-      result = stderr;
+      result = fopen("debugCounterOutput", "a");
    return result;
    }
 
