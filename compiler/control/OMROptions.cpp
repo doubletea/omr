@@ -3623,6 +3623,11 @@ OMR::Options::jitPostProcess()
       TR::Options::disableSamplingThread();
       }
 
+   if (!_enabledDynamicCounterNames)
+      {
+         char *tempOption = "{*}";
+         _enabledDynamicCounterNames = TR::SimpleRegex::create(tempOption);
+      }
 
    if (self()->getOption(TR_StaticDebugCountersRequested) && !_enabledStaticCounterNames)
       _enabledStaticCounterNames = _enabledDynamicCounterNames;
