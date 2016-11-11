@@ -2668,6 +2668,7 @@ OMR::Z::CodeGenerator::doRegisterAssignment(TR_RegisterKinds kindsToAssign)
             if ( realReg->getState() == TR::RealRegister::Free && realReg->getHighWordRegister()->getState() == TR::RealRegister::Free)
                {
                dcbInstr->setAssignableReg(realReg);
+               realReg->setHasBeenAssignedInMethod(true);
                break;
                }
             }
@@ -2899,7 +2900,7 @@ TR_S390Peephole::isBarrierToPeepHoleLookback(TR::Instruction *current)
    if (s390current->isCall())  return true;
    if (s390current->isAsmGen()) return true;
    if (s390current->isBranchOp()) return true;
-
+   if (s390current->getOpCodeValue() == TR::InstOpCode::DCB) return true;
 
    return false;
    }
