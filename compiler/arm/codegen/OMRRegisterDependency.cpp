@@ -218,6 +218,11 @@ OMR::ARM::RegisterDependencyConditions::RegisterDependencyConditions( TR::Node  
       *cursorPtr = cursor;
    }
 
+void OMR::ARM::RegisterDependencyConditions::unionNoRegPostCondition(TR::Register *reg, TR::CodeGenerator *cg)
+   {
+   addPostCondition(reg, TR::RealRegister::NoReg);
+   }
+   
 bool OMR::ARM::RegisterDependencyConditions::refsRegister(TR::Register *r)
    {
    // *this    swipeable for debugging purposes
