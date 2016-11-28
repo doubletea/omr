@@ -361,22 +361,18 @@ TR::DebugCounter *TR::DebugCounterGroup::findCounter(const char *nameChars, int3
    {
    if (nameChars == NULL)
       return NULL;
-
-   // Null terminate the name
    char *name = (char*)alloca(nameLength+1);
    strncpy(name, nameChars, nameLength);
    name[nameLength] = 0;
 
    // There's a race here if we do parallel compilation
+
    OMR::CriticalSection findCounterLock(_countersMutex);
 
-   auto search = _countersHashTable.find(name);
-   if(search != _countersHashTable.end())
-      {
-         return search->second;
-      }
-
-   return NULL;
+   CS2::HashIndex hi;
+   if (!_countersHashTable.Locate(name, hi))
+      return NULL;
+   return _countersHashTable[hi];
    }
 
 TR::DebugCounterAggregation *TR::DebugCounterGroup::createAggregation(TR::Compilation *comp)
@@ -436,9 +432,10 @@ TR::DebugCounter *TR::DebugCounterGroup::createCounter(const char *name, int8_t 
    _counters.add(result);
    
    // There's a race here if we do parallel compilation
+
    OMR::CriticalSection createCounterLock(_countersMutex);
 
-   _countersHashTable.insert(std::make_pair(result->getName(), result));
+   _countersHashTable.Add(result->getName(), result);
 
    return result;
    }

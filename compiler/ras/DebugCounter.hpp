@@ -21,17 +21,16 @@
 
 #include "ras/Debug.hpp"
 
-#include <stdarg.h>                // for va_list
-#include <stddef.h>                // for NULL
-#include <stdint.h>                // for int32_t, int8_t, uint32_t, int64_t, etc
-#include <map>                     // for _countersHashTable
-#include "env/TypedAllocator.hpp"  // for typed_allocator
-#include "env/CompilerEnv.hpp"     // for target->is64Bit()
-#include "env/TRMemory.hpp"        // for TR_MemoryBase::ObjectType::DebugCounter, etc
-#include "env/jittypes.h"          // for intptrj_t
-#include "infra/Flags.hpp"         // for flags8_t
-#include "infra/List.hpp"          // for TR_PersistentList
-#include "infra/Monitor.hpp"       // for createCounter race conditions
+#include <stdarg.h>            // for va_list
+#include <stddef.h>            // for NULL
+#include <stdint.h>            // for int32_t, int8_t, uint32_t, int64_t, etc
+#include "cs2/hashtab.h"       // for HashTable
+#include "env/CompilerEnv.hpp" // for target->is64Bit()
+#include "env/TRMemory.hpp"    // for TR_MemoryBase::ObjectType::DebugCounter, etc
+#include "env/jittypes.h"      // for intptrj_t
+#include "infra/Flags.hpp"     // for flags8_t
+#include "infra/List.hpp"      // for TR_PersistentList
+#include "infra/Monitor.hpp"   // for createCounter race conditions
 
 namespace TR { class Compilation; }
 namespace TR { class Node; }
@@ -230,20 +229,7 @@ public:
 
 class DebugCounterGroup
    {
-   struct debugCounterNameComp
-      {
-      bool operator()(const char* lhs, const char* rhs) const
-         {
-         while (*lhs == *rhs)
-            {
-            if (*lhs==0) return false;
-            lhs+=1; rhs+=1;
-            }
-         return *lhs > *rhs ? true : false;
-         }
-      };
-
-   std::map<const char*, DebugCounter*, debugCounterNameComp, TR::typed_allocator<std::pair<const char*, DebugCounter*>, TRPersistentMemoryAllocator>> _countersHashTable;
+   CS2::HashTable<const char*, DebugCounter*, TRPersistentMemoryAllocator> _countersHashTable;
    TR_PersistentList<DebugCounter> _counters;
    TR_PersistentList<DebugCounterAggregation> _aggregations;
    DebugCounter *createCounter (const char *name, int8_t fidelity, TR_PersistentMemory *mem);
@@ -256,8 +242,7 @@ class DebugCounterGroup
    TR_ALLOC(TR_MemoryBase::DebugCounter)
 
    DebugCounterGroup(TR_PersistentMemory *mem)
-         : _countersHashTable(debugCounterNameComp(),
-                              TR::typed_allocator<std::pair<const char*, DebugCounter*>, TRPersistentMemoryAllocator>(TRPersistentMemoryAllocator(mem)))
+         : _countersHashTable(TRPersistentMemoryAllocator(mem))
          {
          _countersMutex = TR::Monitor::create("countersMutex");
          }
