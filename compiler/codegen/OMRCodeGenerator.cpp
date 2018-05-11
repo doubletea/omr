@@ -243,7 +243,6 @@ OMR::CodeGenerator::CodeGenerator() :
      _variableSizeSymRefPendingFreeList(getTypedAllocator<TR::SymbolReference*>(TR::comp()->allocator())),
      _variableSizeSymRefFreeList(getTypedAllocator<TR::SymbolReference*>(TR::comp()->allocator())),
      _variableSizeSymRefAllocList(getTypedAllocator<TR::SymbolReference*>(TR::comp()->allocator())),
-     _accumulatorNodeUsage(0),
      _nodesUnderComputeCCList(getTypedAllocator<TR::Node*>(TR::comp()->allocator())),
      _nodesToUncommonList(getTypedAllocator<TR::Node*>(TR::comp()->allocator())),
      _nodesSpineCheckedList(getTypedAllocator<TR::Node*>(TR::comp()->allocator())),

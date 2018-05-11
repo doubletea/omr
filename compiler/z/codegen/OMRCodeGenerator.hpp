@@ -471,10 +471,6 @@ public:
    bool isOutOf32BitPositiveRange(int64_t value, bool trace);
    int32_t getMaskSize(int32_t leftMostNibble, int32_t nibbleCount);
 
-   void setAccumulatorNodeUsage(int32_t n) { _accumulatorNodeUsage = n; }
-   int32_t getAccumulatorNodeUsage()       { return _accumulatorNodeUsage; }
-   void incAccumulatorNodeUsage()          { _accumulatorNodeUsage++; }
-
    bool possiblyConflictingNode(TR::Node *node);
    bool foundConflictingNode(TR::Node *node, TR::list<TR::Node*> *conflictingAddressNodes);
    void collectConflictingAddressNodes(TR::Node *parent, TR::Node *node, TR::list<TR::Node*> *conflictingAddressNodes);

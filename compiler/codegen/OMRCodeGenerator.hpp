@@ -1858,8 +1858,6 @@ class OMR_EXTENSIBLE CodeGenerator
    TR::list<TR::SymbolReference*> _variableSizeSymRefFreeList;
    TR::list<TR::SymbolReference*> _variableSizeSymRefAllocList;
 
-   int32_t _accumulatorNodeUsage;
-
    TR::list<TR::Register*> *_spilledRegisterList;
    TR::list<TR::Register*> *_firstTimeLiveOOLRegisterList;
    TR::list<OMR::RegisterUsage*> *_referencedRegistersList;
